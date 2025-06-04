@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  # ─── 1) 데이터 복사 전용 초기 컨테이너 ─────────────────────────────────────
+  data-sync:
+    image: busybox
+    container_name: data-sync
+    volumes:
+      # named-volume → /opt/airflow/data
+      - type: volume
+        source: data_volume
+        target: /opt/airflow/data
+
+      # host ./data → /data-host (읽기 전용, cached)
+      - type: bind
+        source: ./data
+        target: /data-host
+        read_only: true
+        consistency: cached
+
+    entrypoint:
+      - sh
+      - -c
+      - |
+        cp -r /data-host/. /opt/airflow/data && \
+        chown -R 50000:50000 /opt/airflow/data && \
+        echo 'Data sync completed.'
+
+  # ─── 2) PostgreSQL ─────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:13
+    container_name: airflow-postgres
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+     
