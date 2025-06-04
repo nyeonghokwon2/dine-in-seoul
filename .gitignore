@@ -1,3 +1,6 @@
+# Data files
+data/
+
 # Python
 __pycache__/
 *.py[cod]
@@ -29,6 +32,12 @@ webserver_config.py
 # Environment variables
 .env
 .env.*
+
+# Environment
+.venv
+env/
+venv/
+ENV/
 
 # IDE
 .idea/
