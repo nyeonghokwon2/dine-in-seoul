@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
-  # ─── 1) 데이터 복사 전용 초기 컨테이너 ─────────────────────────────────────
+  # 데이터 복사 전용 초기 컨테이너
   data-sync:
     image: busybox
     container_name: data-sync
@@ -26,7 +26,7 @@ services:
         chown -R 50000:50000 /opt/airflow/data && \
         echo 'Data sync completed.'
 
-  # ─── 2) PostgreSQL ─────────────────────────────────────────────────────────
+  # PostgreSQL
   postgres:
     image: postgres:13
     container_name: airflow-postgres
@@ -37,7 +37,7 @@ services:
     volumes:
       - postgres_db:/var/lib/postgresql/data
 
-  # ─── 3) Airflow 초기화 ───────────────────────────────────────────────────────
+  # Airflow 초기화
   airflow-init:
     build: .
     container_name: airflow-init
@@ -66,14 +66,14 @@ services:
       - ./logs:/opt/airflow/logs
       - ./plugins:/opt/airflow/plugins
 
-  # ─── 4) Airflow Webserver ─────────────────────────────────────────────────
+  # 4) Airflow Webserver
   airflow-webserver:
     build: .
     container_name: airflow-webserver
     depends_on:
       - airflow-init
     ports:
-      - "8080:8080" # 필요시 "8081:8080" 으로 변경
+      - "8080:8080"
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
@@ -85,7 +85,7 @@ services:
       - ./logs:/opt/airflow/logs
       - ./plugins:/opt/airflow/plugins
 
-  # ─── 5) Airflow Scheduler ─────────────────────────────────────────────────
+  # 5) Airflow Scheduler
   airflow-scheduler:
     build: .
     container_name: airflow-scheduler
