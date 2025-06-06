@@ -67,13 +67,13 @@ try:
     
     with col1:
         st.markdown("#### Top 10 식당")
-        # Top 10 표 (타이틀 제거, 컬럼명 변경, 순위 추가)
+        # Top 10 표 (빈 인덱스 컬럼 없이, 순위가 맨 앞에 오도록)
         top_restaurants = filtered_restaurants.sort_values('rating', ascending=False).head(10).copy()
         top_restaurants = top_restaurants.reset_index(drop=True)
         top_restaurants['순위'] = [f"{i+1}위" for i in range(len(top_restaurants))]
         top_restaurants = top_restaurants[['순위', 'name', 'address', 'rating']]
         top_restaurants.columns = ['순위', '이름', '주소', '별점']
-        st.dataframe(top_restaurants, use_container_width=True)
+        st.dataframe(top_restaurants, use_container_width=True, hide_index=True)
         
         # 지역별 평균 별점 (타이틀만, 텍스트 제거, 점 위에 숫자 표시)
         st.subheader("지역별 평균 별점")
