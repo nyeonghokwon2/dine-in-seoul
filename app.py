@@ -13,7 +13,7 @@ st.set_page_config(
 )
 
 # 타이틀
-st.title("서울 한식 맛집 추천 대시보드")
+st.title("서울 맛집 추천 대시보드")
 
 # 데이터 로드
 @st.cache_data
