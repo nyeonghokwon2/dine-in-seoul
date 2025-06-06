@@ -40,7 +40,7 @@ try:
     min_rating = st.sidebar.slider(
         "최소 별점",
         min_value=0.0,
-        max_value=1.0,
+        max_value=5.0,
         value=0.0,
         step=0.1
     )
@@ -78,9 +78,9 @@ try:
             labels={'address': '지역', 'rating': '평균 별점'},
             markers=True  # 데이터 포인트에 마커 표시
         )
-        # Y축 범위 설정 (0.6 ~ 1.0)
+        # Y축 범위 설정 (3.0 ~ 5.0)
         fig.update_layout(
-            yaxis=dict(range=[0.6, 1.0]),
+            yaxis=dict(range=[3.0, 5.0]),
             showlegend=False
         )
         st.plotly_chart(fig, use_container_width=True)
@@ -96,13 +96,13 @@ try:
         # 식당 위치 표시
         for _, row in filtered_restaurants.iterrows():
             # 별점에 따라 마커 색상 변경
-            color = 'red' if row['rating'] >= 0.8 else 'orange' if row['rating'] >= 0.6 else 'blue'
+            color = 'red' if row['rating'] >= 4.0 else 'orange' if row['rating'] >= 3.0 else 'blue'
             
             folium.Marker(
                 [row['latitude'], row['longitude']],
                 popup=f"""
                     <b>{row['name']}</b><br>
-                    별점: {row['rating']}<br>
+                    별점: {row['rating']:.1f}<br>
                     주소: {row['address']}
                 """,
                 tooltip=row['name'],
