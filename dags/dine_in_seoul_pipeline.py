@@ -149,7 +149,7 @@ def add_sentiment(**context) -> None:
     logger.info("감성 분석 시작")
     
     df = pd.read_csv(STEP2_CSV)
-    df["감성"] = df["별점"].apply(lambda r: "긍정" if r>=4 else ("중립" if r==3 else "부정"))
+    df["감성"] = df["별점"].apply(lambda r: "추천해요" if r>=4 else ("적당해요" if r==3 else "별로예요"))
     df.to_csv(STEP3_CSV, index=False, encoding="utf-8-sig", quoting=csv.QUOTE_MINIMAL)
     
     logger.info("감성 분석 완료")
