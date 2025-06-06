@@ -22,7 +22,7 @@
 ## 데이터
 
 - 식당 정보 및 평점 데이터: data/restaurants.csv
-- 감성 및 리뷰 데이터: data/seoul_hansik_sentiment.csv
+- 감성 및 리뷰 데이터: data/seoul_sentiment.csv
 
 ## 환경
 
