@@ -25,7 +25,7 @@ def load_data():
 try:
     restaurants = load_data()
     
-    # 지역 10개 이상 노출 (임의로 10개 이상 지역 생성)
+    # 지역 노출
     if restaurants['address'].nunique() < 10:
         import numpy as np
         addresses = [f"서울시 구로구 지역{i+1}" for i in range(10)]
@@ -67,7 +67,7 @@ try:
     
     with col1:
         st.markdown("#### Top 10 식당")
-        # Top 10 표 (빈 인덱스 컬럼 없이, 순위가 맨 앞에 오도록)
+        # Top 10 표
         top_restaurants = filtered_restaurants.sort_values('rating', ascending=False).head(10).copy()
         top_restaurants = top_restaurants.reset_index(drop=True)
         top_restaurants['순위'] = [f"{i+1}위" for i in range(len(top_restaurants))]
@@ -75,7 +75,7 @@ try:
         top_restaurants.columns = ['순위', '이름', '주소', '별점']
         st.dataframe(top_restaurants, use_container_width=True, hide_index=True)
         
-        # 지역별 평균 별점 (타이틀만, 텍스트 제거, 점 위에 숫자 표시)
+        # 지역별 평균 별점
         st.subheader("지역별 평균 별점")
         avg_ratings = filtered_restaurants.groupby('address')['rating'].mean().reset_index()
         fig = px.line(
@@ -92,7 +92,7 @@ try:
         st.plotly_chart(fig, use_container_width=True)
     
     with col2:
-        # 식당 위치 (이모지 제거)
+        # 식당 위치
         st.subheader("식당 위치")
         m = folium.Map(
             location=[filtered_restaurants['latitude'].mean(), filtered_restaurants['longitude'].mean()],
@@ -112,7 +112,7 @@ try:
             ).add_to(m)
         folium_static(m, width=600, height=400)
         
-        # 지역별 식당 수 (타이틀만, 텍스트 제거, 막대 위에 숫자 표시)
+        # 지역별 식당 수
         st.subheader("지역별 식당 수")
         address_counts = filtered_restaurants['address'].value_counts().reset_index()
         address_counts.columns = ['address', 'count']

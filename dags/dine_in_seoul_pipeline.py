@@ -15,7 +15,7 @@ import openai
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 
-# ────────── 로깅 설정 ──────────
+# 로그
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -23,7 +23,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# ────────── 공통 설정 ──────────
+# data path
 DATA_DIR  = "data"
 SRC_CSV   = f"{DATA_DIR}/서울시_일반음식점_인허가_정보.csv"
 STEP1_CSV = f"{DATA_DIR}/seoul_hansik_list.csv"
@@ -31,9 +31,9 @@ STEP2_CSV = f"{DATA_DIR}/seoul_hansik_with_reviews.csv"
 STEP3_CSV = f"{DATA_DIR}/seoul_hansik_sentiment.csv"
 STEP4_CSV = f"{DATA_DIR}/hansik_reco_top10.csv"
 
-MODEL  = "gpt-3.5-turbo"  # OpenAI의 실제 모델명
-DELAY  = 1.2  # API 호출 간 대기(초)
-MAX_LINES = 30  # 처리할 최대 라인 수
+MODEL  = "gpt-3.5-turbo"  
+DELAY  = 1.2  # API 호출 간 대기 초
+MAX_LINES = 30  # 처리할 맥스 라인 수
 
 class ReviewGenerator:
     def __init__(self):
@@ -89,7 +89,7 @@ def extract_hansik(**context) -> None:
                 if i >= MAX_LINES:
                     break
 
-        # 2) 한식 식당 필터링
+        # 2) 식당 필터링
         seen = set()
         with open(tmp_src, "r", encoding="euc-kr", newline="") as fin2, \
              open(STEP1_CSV, "w", encoding="utf-8-sig", newline="") as fout2:
@@ -105,7 +105,7 @@ def extract_hansik(**context) -> None:
                         writer.writerow(key)
                         seen.add(key)
     
-    logger.info(f"한식 식당 데이터 추출 완료: {len(seen)}개 식당")
+    logger.info(f"식당 데이터 추출 완료: {len(seen)}개 식당")
 
 def generate_reviews(**context) -> None:
     """가상 리뷰 생성"""
@@ -172,7 +172,7 @@ def calc_reco(**context) -> None:
     logger.info("추천 Top 10 계산 완료")
     logger.info("\n=== 추천 Top 10 ===\n%s", top)
 
-# ────────── DAG 정의 ──────────
+# DAG 정의
 with DAG(
     dag_id="daily_dine_in_seoul_pipeline",
     start_date=pendulum.today("UTC").add(days=-1),
